@@ -1,0 +1,8 @@
+Editor:
+* Drop down menu that can choose scripts;
+* Button that adds/deletes/moves scripts to the list;
+* Calculate the score of the behaviour;
+* 
+
+https://sites.google.com/site/tuxnots/gamming/unity3d/unitymakeyourlistsfunctionalwithreorderablelist
+^ Might be the one
