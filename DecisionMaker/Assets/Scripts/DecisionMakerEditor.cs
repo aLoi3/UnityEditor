@@ -8,15 +8,15 @@ using UnityEngine.UI;
 public class DecisionMakerEditor : Editor {
     // Have to play to choose enumerators
 
-    DecisionMaker DM;
+    //DecisionMaker DM;
 
-    public void OnEnable()
-    {
-        DM = (DecisionMaker)target;
-    }
+    //public void OnEnable()
+    //{
+    //    DM = (DecisionMaker)target;
+    //}
 
-    public override void OnInspectorGUI()
-    {
-        DM.enumerator = EditorGUILayout.EnumPopup(DM.enumerator);
-    }
+    //public override void OnInspectorGUI()
+    //{
+    //    DM.enumerator = EditorGUILayout.EnumPopup(DM.enumerator);
+    //}
 }
