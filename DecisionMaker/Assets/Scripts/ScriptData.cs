@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System;
+using System.Reflection;
 
 public class ScriptData : MonoBehaviour
 {
@@ -18,5 +20,11 @@ public class ScriptData : MonoBehaviour
         }
 
 
+    }
+
+    private void Update()
+    {
+        Type t = data[0].Script.GetType();
+        //t.GetMethod("PrintStr").Invoke(new object[] { });
     }
 }

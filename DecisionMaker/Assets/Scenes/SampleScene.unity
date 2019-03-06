@@ -435,7 +435,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3df235fbc19c544392c262e98e96fb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: []
+  data:
+  - Type: 0
+    Script: {fileID: 11500000, guid: 72fd80b7fb4d69f40a02e11148dcc07c, type: 3}
+  - Type: 0
+    Script: {fileID: 11500000, guid: 0ed518e09c4b9ad449b447ac7b52fc17, type: 3}
   holder: {fileID: 0}
 --- !u!4 &2019768422
 Transform:
