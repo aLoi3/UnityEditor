@@ -2,7 +2,17 @@ Editor:
 * Drop down menu that can choose scripts;
 * Button that adds/deletes/moves scripts to the list;
 * Calculate the score of the behaviour;
-* 
+* Change functions to public;
 
 https://sites.google.com/site/tuxnots/gamming/unity3d/unitymakeyourlistsfunctionalwithreorderablelist
 ^ Might be the one
+
+Use Type to get public variable and functions (methods):
+https://forum.unity.com/threads/get-a-list-of-all-variables-and-functions-in-a-script.291917/
+
+Methods are functions
+Fields are variables
+Type is class
+
+https://www.youtube.com/watch?v=wfDFI9A56Gs
+https://www.youtube.com/watch?v=85_l-bdMlSE

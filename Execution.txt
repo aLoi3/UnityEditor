@@ -1,0 +1,12 @@
+* Calculate score in the AI script (must be return type)
+* Get all score into ScriptData script 
+* Choose the highest one
+* Execute that score's behaviour (must be void)
+
+Notes:
+- Always must be a cunstructor of the class name (can also be empty)
+- Score evaluation's function must called the same in all scripts
+- Executed behaviour's function name must also be the same in all scripts
+
+
+if getting component doesn't work in behaviour script, add it in the scriptData and send it to the constructor
