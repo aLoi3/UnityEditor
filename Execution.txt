@@ -10,3 +10,9 @@ Notes:
 
 
 if getting component doesn't work in behaviour script, add it in the scriptData and send it to the constructor
+
+behaviourMethod was invoking the last script's method (if the one that should be executed was first, it would give an error)
+
+Currently works only with one script -> need to make it function with multiple scripts attached to the list
+
+Both ConstructionInfo methods work (in the Start)
