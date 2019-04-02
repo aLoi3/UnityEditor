@@ -9,7 +9,6 @@ using System.Reflection;
 public class ScriptData : MonoBehaviour
 {
     public List<Scripts> data = new List<Scripts>();
-    public GameObject holder;
     public List<string> classNames;
     public List<Type> types;
 
@@ -17,10 +16,11 @@ public class ScriptData : MonoBehaviour
     private Rigidbody rigidbody;
     private int highestScore = 0;
     private int index;
-    private MonoBehaviour[] myScripts;
-    private object classObject;
+    private object[] classObject;
     private object scoreObject;
     private object behaviourObject;
+    private object[] parameters;
+    private ConstructorInfo constructor;
 
     private void Start()
     {
@@ -31,24 +31,9 @@ public class ScriptData : MonoBehaviour
         myNavMeshAgent = GetComponent<NavMeshAgent>();
         rigidbody = GetComponent<Rigidbody>();
 
-        //classObject = new object[] { };
-        //scoreObject = new object[] { };
-        //behaviourObject = new object[] { };
+        object[] parameters = new object[] { myNavMeshAgent, rigidbody };
 
-        //for (int i=0; i<data.Count; i++)
-        //{
-        //    // Get all class names into a list
-        //    classNames.Add(data[i].Script.name);
-        //    print(classNames[i]);
-        //
-        //    // Get the class
-        //    types.Add(Type.GetType(classNames[i]));
-        //
-        //    // Get the constructor and invoke it
-        //    ConstructorInfo constructor = types[i].GetConstructor(Type.EmptyTypes);
-        //    classObject = constructor.Invoke(this, new object[] { });
-        //
-        //}
+        classObject = new object[data.Count];
 
         for (int i = 0; i < data.Count; i++)
         {
@@ -59,46 +44,25 @@ public class ScriptData : MonoBehaviour
             // Get the class
             types.Add(Type.GetType(classNames[i]));
 
-            //ConstructorInfo constructor = types[i].GetConstructor(new[] { typeof(NavMeshAgent), typeof(Rigidbody) });
-            //classObject = constructor.Invoke(classObject, new object[] { myNavMeshAgent, rigidbody });
+            ConstructorInfo constructor = types[i].GetConstructor(new[] { typeof(NavMeshAgent), typeof(Rigidbody) });
+            classObject[i] = constructor.Invoke(classObject[i], new object[] { myNavMeshAgent, rigidbody });
         }
-
-        // Get the constructor and invoke it
-        foreach (Type type in types)
-        {
-            ConstructorInfo constructor = type.GetConstructor(new[] { typeof(NavMeshAgent), typeof(Rigidbody) });
-            classObject = constructor.Invoke(classObject, new object[] { myNavMeshAgent, rigidbody });
-        }
-
     }
 
     public void Update()
     {
-        //for (int i = 0; i < data.Count; i++)
-        //{
-        //    // Get the method and invoke it
-        //    MethodInfo score = types[i].GetMethod("ScoreEvaluator");
-        //    object test = score.Invoke(classObject, new object[] { });
-
-        //    GetHighscore((int)test, i);
-
-        //    Debug.Log(highestScore);
-        //}
-        //MethodInfo behaviour = types[index].GetMethod("BehaviourExecute");
-        //object behaviourMethod = behaviour.Invoke(classObject, new object[] { });
-
         for (int i = 0; i < data.Count; i++)
         {
             // Get the method and invoke it
-            MethodInfo score = types[i].GetMethod("ScoreEvaluator");
-            scoreObject = score.Invoke(classObject, new object[] { });
+            MethodInfo score = types[i].GetMethod("ScoreEvaluator", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+            scoreObject = score.Invoke(classObject[i], new object[] { });
             GetHighscore((int)scoreObject, i);
 
             Debug.Log(highestScore);
         }
 
         MethodInfo behaviour = types[index].GetMethod("BehaviourExecute", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-        behaviourObject = behaviour.Invoke(classObject, new object[] { });
+        behaviourObject = behaviour.Invoke(classObject[index], new object[] { });
     }
 
     public void GetHighscore(int score, int i)

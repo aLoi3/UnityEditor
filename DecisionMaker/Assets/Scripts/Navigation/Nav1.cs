@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Nav1 : MonoBehaviour {
+public class Nav1
+{
 
     private int test;
     public Vector3 wanderTarget;
@@ -27,7 +28,7 @@ public class Nav1 : MonoBehaviour {
 
     public int ScoreEvaluator()
     {
-        return 80;
+        return 85;
     }
 
     public void BehaviourExecute()

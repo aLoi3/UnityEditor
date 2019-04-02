@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Some1 : MonoBehaviour
+public class Some1
 {
 
     private int test;
