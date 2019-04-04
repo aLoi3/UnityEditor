@@ -52,7 +52,7 @@ public class ScriptDataEditor : Editor
             {
                 EditorGUIUtility.PingObject(script);
             }
-        }; 
+        };
 
         // Disables "Remove" button when there's only 1 element left
         /* list.onCanRemoveCallback = (ReorderableList l) =>
@@ -61,14 +61,14 @@ public class ScriptDataEditor : Editor
         }; */
 
         // Gives a warning when a scripts is about to get removed
-        //list.onRemoveCallback = (ReorderableList l) =>
-        //{
-        //    if (EditorUtility.DisplayDialog("Warning!",
-        //        "Are you sure you want to delete the script?", "Yes", "No"))
-        //    {
-        //        ReorderableList.defaultBehaviours.DoRemoveButton(l);
-        //    }
-        //}; 
+        list.onRemoveCallback = (ReorderableList l) =>
+        {
+            if (EditorUtility.DisplayDialog("Warning!",
+                "Are you sure you want to delete the script?", "Yes", "No"))
+            {
+                ReorderableList.defaultBehaviours.DoRemoveButton(l);
+            }
+        };
 
         // Adds a specific prefab with specific count when adding a new element
         list.onAddCallback = (ReorderableList l) =>
@@ -95,13 +95,21 @@ public class ScriptDataEditor : Editor
                     false, clickHandler,
                     new ScriptCreationParams() { Type = Scripts.ScriptType.Navigation, Path = path });
             }
-            guids = AssetDatabase.FindAssets("", new[] { "Assets/Scripts/Something" });
+            guids = AssetDatabase.FindAssets("", new[] { "Assets/Scripts/Detection" });
             foreach (var guid in guids)
             {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
-                menu.AddItem(new GUIContent("Something/" + Path.GetFileNameWithoutExtension(path)),
+                menu.AddItem(new GUIContent("Detection/" + Path.GetFileNameWithoutExtension(path)),
                     false, clickHandler,
-                    new ScriptCreationParams() { Type = Scripts.ScriptType.Something, Path = path });
+                    new ScriptCreationParams() { Type = Scripts.ScriptType.Detection, Path = path });
+            }
+            guids = AssetDatabase.FindAssets("", new[] { "Assets/Scripts/Combat" });
+            foreach (var guid in guids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                menu.AddItem(new GUIContent("Combat/" + Path.GetFileNameWithoutExtension(path)),
+                    false, clickHandler,
+                    new ScriptCreationParams() { Type = Scripts.ScriptType.Combat, Path = path });
             }
             menu.ShowAsContext();
         };

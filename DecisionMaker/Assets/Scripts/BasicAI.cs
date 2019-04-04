@@ -10,7 +10,8 @@ public struct Scripts
     public enum ScriptType
     {
         Navigation,
-        Something
+        Detection,
+        Combat
     }
     
     public ScriptType Type;

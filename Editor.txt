@@ -1,0 +1,6 @@
+Add another variable? to BasicAI (DATA ABOUT THE SCRIPT) and get fields/properties of that script (with object)
+
+Use .CreateEditor (MAYBE) to display variable of each script added to the list
+
+https://docs.microsoft.com/en-us/dotnet/api/system.type.getfields?view=netframework-4.7.2
+GetFields() -> gets all public fields of the current Type

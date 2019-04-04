@@ -1,0 +1,14 @@
+Scripts to consider:
+- Detection:
+* Radius 
+* Raycast 
+
+- Navigation:
+* Wander
+* Waypoint
+* 
+
+- Combat: ???
+* Basic
+* Ranged
+* 

@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class Nav1
 {
+    // Wander
 
     private int test;
     public Vector3 wanderTarget;
@@ -26,12 +27,19 @@ public class Nav1
         Debug.Log(test);
     }
 
-    public int ScoreEvaluator()
+    public int ScoreEvaluator(Transform target)
     {
-        return 85;
+        if(target == null)
+        {
+            return 95;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
-    public void BehaviourExecute()
+    public void BehaviourExecute(Transform target)
     {
         Debug.Log("I'm navigating... + Nav1");
         delta += Time.deltaTime;
