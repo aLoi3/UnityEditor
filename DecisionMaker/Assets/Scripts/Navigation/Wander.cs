@@ -3,41 +3,51 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Nav1
+public class Wander
 {
-    // Wander
-
-    private int test;
     public Vector3 wanderTarget;
-    public float wanderRange = 4.0f;
     public NavMeshHit navHit;
-    public float delta = 0.0f;
     public NavMeshAgent myNavMeshAgent;
     public Rigidbody rigidbody;
 
-    public Nav1(NavMeshAgent agent, Rigidbody rb)
+    public float wanderRange = 4.0f;
+    public float delta = 0.0f;
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="agent"> NavMeshAgent component </param>
+    /// <param name="rb"> Rigidbody component </param>
+
+    public Wander(NavMeshAgent agent, Rigidbody rb)
     {
-        test = 10;
         myNavMeshAgent = agent;
         rigidbody = rb;
     }
 
-    public void PrintStr()
-    {
-        Debug.Log(test);
-    }
+    /// <summary>
+    /// Evaluates the score.
+    /// Right now is constant, will be dynamic in later development
+    /// </summary>
+    /// <param name="target"> Player's Transform </param>
+    /// <returns> Integer - score </returns>
 
     public int ScoreEvaluator(Transform target)
     {
         if(target == null)
         {
-            return 95;
+            return 100;
         }
         else
         {
             return 0;
         }
     }
+
+    /// <summary>
+    /// Wander behavior - chooses a random point around it and goes there
+    /// </summary>
+    /// <param name="target"> Player's transform (not needed, will be removed in lated development) </param>
 
     public void BehaviourExecute(Transform target)
     {
@@ -74,6 +84,14 @@ public class Nav1
         }
     }
 
+    /// <summary>
+    /// Chooses a random position for the agent to go to
+    /// </summary>
+    /// <param name="centre"> Center of the agent </param>
+    /// <param name="range"> Range around the agent to look a position for </param>
+    /// <param name="result"> End position </param>
+    /// <returns> True - if found a position, False - if hasn't </returns>
+    
     bool RandomWanderTarget(Vector3 centre, float range, out Vector3 result)
     {
         // Sets invisible sphere for enemy to decide where to go

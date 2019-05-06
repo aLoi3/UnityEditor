@@ -5,18 +5,22 @@ using UnityEditor;
 using UnityEditorInternal;
 using System.IO;
 
-[CustomEditor (typeof ( ScriptData ) )]
+[CustomEditor (typeof ( DecisionMaker ) )]
 public class ScriptDataEditor : Editor
 {
     private ReorderableList list;
-
-
+    
     private struct ScriptCreationParams
     {
         public Scripts.ScriptType Type;
         public string Path;
     }
 
+    /// <summary>
+    /// A custom editor that is shown for main script that holds all the behaviors
+    /// I can't remember what this all means, so there we go...
+    /// </summary>
+    
     private void OnEnable()
     {
         list = new ReorderableList(serializedObject, 
@@ -33,15 +37,9 @@ public class ScriptDataEditor : Editor
             {
                 var element = list.serializedProperty.GetArrayElementAtIndex(index);
                 rect.y += 2;
-                //EditorGUI.PropertyField(
-                    //new Rect(rect.x, rect.y, 60, EditorGUIUtility.singleLineHeight),
-                    //element.FindPropertyRelative("Type"), GUIContent.none);
                 EditorGUI.PropertyField(
                     new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight),
                     element.FindPropertyRelative("Script"), GUIContent.none);
-                //EditorGUI.PropertyField(
-                //    new Rect(rect.x + rect.width - 30, rect.y, 30, EditorGUIUtility.singleLineHeight),
-                //    element.FindPropertyRelative("Count"), GUIContent.none);
             };
 
         // Highlight the asset when dragging
@@ -60,7 +58,7 @@ public class ScriptDataEditor : Editor
             return l.count > 1;
         }; */
 
-        // Gives a warning when a scripts is about to get removed
+        // Gives a warning when a script is about to get removed
         list.onRemoveCallback = (ReorderableList l) =>
         {
             if (EditorUtility.DisplayDialog("Warning!",
@@ -70,20 +68,20 @@ public class ScriptDataEditor : Editor
             }
         };
 
-        // Adds a specific prefab with specific count when adding a new element
+        // Adds a specific script with when adding a new element
         list.onAddCallback = (ReorderableList l) =>
         {
             var index = l.serializedProperty.arraySize;
             l.serializedProperty.arraySize++;
             l.index = index;
             var element = l.serializedProperty.GetArrayElementAtIndex(index);
-            //element.FindPropertyRelative("Type").enumValueIndex = 0;
-            //element.FindPropertyRelative("Count").intValue = 20;
             element.FindPropertyRelative("Script").objectReferenceValue = 
                 AssetDatabase.LoadAssetAtPath("Assets/Scripts/Navigation/Nav1.cs",
                 typeof(MonoScript)) as MonoScript;
         }; 
 
+        // Dropdown menu when selecting a script to add
+        // Has a couple of layers to easier find specific behavior
         list.onAddDropdownCallback = (Rect buttonRect, ReorderableList l) =>
         {
             var menu = new GenericMenu();
@@ -123,7 +121,7 @@ public class ScriptDataEditor : Editor
         serializedObject.ApplyModifiedProperties();
     }
 
-    // Handles dropdown menu that adds mobs (for now) 
+    // Handles dropdown menu that adds scripts
     private void clickHandler(object target)
     {
         var data = (ScriptCreationParams)target;
@@ -131,9 +129,6 @@ public class ScriptDataEditor : Editor
         list.serializedProperty.arraySize++;
         list.index = index;
         var element = list.serializedProperty.GetArrayElementAtIndex(index);
-        //element.FindPropertyRelative("Type").enumValueIndex = (int)data.Type;
-        //element.FindPropertyRelative("Count").intValue =
-        //    data.Type == Scripts.ScriptType.Something ? 1 : 20; // Boss count will be 1, Mob count 20
         element.FindPropertyRelative("Script").objectReferenceValue =
             AssetDatabase.LoadAssetAtPath(data.Path, typeof(MonoScript)) as MonoScript;
         serializedObject.ApplyModifiedProperties();

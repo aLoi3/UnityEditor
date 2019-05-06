@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Ranged behavior - To be done in the future
 public class Ranged : MonoBehaviour {
 
 	// Use this for initialization

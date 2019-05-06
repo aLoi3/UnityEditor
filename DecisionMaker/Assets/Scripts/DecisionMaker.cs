@@ -1,38 +1,91 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
+using UnityEngine.AI;
+using System;
 using System.Reflection;
-using System.Reflection.Emit;
-
+using System.Linq;
 
 public class DecisionMaker : MonoBehaviour
 {
-    //public System.Enum enumerator;
-    //List<string> myList = new List<string>() { "Test", "Test2", "Test3" };
+    public List<Scripts> data = new List<Scripts>();    // Data of all scripts in a list
+    public List<string> classNames;                     // List of all behavior class names
+    public List<Type> types;                            // List of all behavior types
 
-    //public void OnEnable()
-    //{
-    //    enumerator = CreateEnumFromArrays(myList);
-    //}
+    private NavMeshAgent myNavMeshAgent;                // NavMeshAgent
+    private Rigidbody rigidbody;                        // Rigidbody of an agent
 
-    //public static System.Enum CreateEnumFromArrays(List<string> list)
-    //{
-    //    System.AppDomain currentDomain = System.AppDomain.CurrentDomain;
-    //    AssemblyName aName = new AssemblyName("Enum");
-    //    AssemblyBuilder ab = currentDomain.DefineDynamicAssembly(aName, AssemblyBuilderAccess.Run);
-    //    ModuleBuilder mb = ab.DefineDynamicModule(aName.Name);
-    //    EnumBuilder enumerator = mb.DefineEnum("Enum", TypeAttributes.Public, typeof(int));
+    private int highestScore = 0;                       // Current highest score
+    private int index;                                  // Index of the highest scores script
+    private object[] classObject;                       // Class of a behavior script
+    private object[] scoreObject;                       // Score given from a behavior script
+    private object behaviourObject;                     // Agent's behavior, which is going to be executed
+    private object targetObject = null;                 // Target for an agent to look chase/look for
+    private int[] scores;                               // All scores
 
-    //    int i = 0;
-    //    enumerator.DefineLiteral("None", i);
+    private void Start()
+    {
+        // Create a list of class names
+        classNames = new List<string>();
+        // Create a list of behavior types
+        types = new List<Type>();
 
-    //    foreach (string names in list)
-    //    {
-    //        i++;
-    //        enumerator.DefineLiteral(names, i);
-    //    }
+        // Get the components
+        myNavMeshAgent = GetComponent<NavMeshAgent>();
+        rigidbody = GetComponent<Rigidbody>();
 
-    //    System.Type finished = enumerator.CreateType();
-    //    return (System.Enum)System.Enum.ToObject(finished, 0);
-    //}
+        // Assign all arrays length
+        classObject = new object[data.Count];
+        scoreObject = new object[data.Count];
+        scores = new int[data.Count];
+
+        for (int i = 0; i < data.Count; i++)
+        {
+            // Get all class names into a list
+            classNames.Add(data[i].Script.name);
+            print(classNames[i]);
+
+            // Add the class type
+            types.Add(Type.GetType(classNames[i]));
+
+            // Invoke a constructor
+            ConstructorInfo constructor = types[i].GetConstructor(new[] { typeof(NavMeshAgent), typeof(Rigidbody) });
+            classObject[i] = constructor.Invoke(classObject[i], new object[] { myNavMeshAgent, rigidbody });
+        }
+    }
+
+    public void Update()
+    {
+        for (int i = 0; i < data.Count; i++)
+        {
+            // Check if the scripts used for detection
+            if(types[i].GetMethod("Detection") != null)
+            {
+                // Invoke it's method (function)
+                MethodInfo target = types[i].GetMethod("Detection", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+                targetObject = target.Invoke(classObject[i], new object[] { });
+            }
+
+            // Check if the scripts have score evaluators
+            if (types[i].GetMethod("ScoreEvaluator") != null)
+            {
+                // Invoke it's method (function
+                MethodInfo score = types[i].GetMethod("ScoreEvaluator", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+                scoreObject[i] = score.Invoke(classObject[i], new object[] { (Transform)targetObject });
+                // Add the score to array
+                scores[i] = (int)scoreObject[i];
+            }
+        }
+        // Get the highest score
+        highestScore = scores.Max();
+        // Get the highest score's array index
+        index = Array.IndexOf(scores, highestScore);
+        Debug.Log(highestScore);
+        Debug.Log(targetObject);
+
+        // Execute the behavior, that has the highest score
+        MethodInfo behaviour = types[index].GetMethod("BehaviourExecute", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+        behaviourObject = behaviour.Invoke(classObject[index], new object[] { (Transform)targetObject });
+    }
 }
